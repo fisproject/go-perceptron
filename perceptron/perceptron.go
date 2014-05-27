@@ -18,27 +18,27 @@ type Datas struct {
 /* json []byte to golangObj */
 type JsonParseObj struct {
 	Training_set_count int
-	Training_set_1 Datas
-	Training_set_2 Datas
-	Training_set_3 Datas
-	Training_set_4 Datas
+	Training_set_1     Datas
+	Training_set_2     Datas
+	Training_set_3     Datas
+	Training_set_4     Datas
 }
 
 /*  string to []string to []float64  */
-func stof(value string) []float64 {
-	val := make([]float64, 0)
+func stof(value string) (val []float64, err error) {
+	val = make([]float64, 0)
 	s := strings.Split(value, ",")
 	for _, t := range s {
 		if t != "" && t != "\t" {
 			n, err := strconv.ParseFloat(t, 64)
 			if err != nil {
 				fmt.Println(err)
-				return []float64{-1}
+				return nil, err
 			}
 			val = append(val, n)
 		}
 	}
-	return val
+	return val, nil
 }
 
 /*  bool to int */
@@ -81,19 +81,19 @@ func dot_product(inputValues []float64, weights []float64) float64 {
 }
 
 /* Learning */
-func Learning(threshold float64, eta float64, weights []float64, training_set []byte) bool {
+func Learning(threshold float64, eta float64, weights []float64, training_set []byte) (condition bool, err error) {
 
 	_weights = weights
 
 	training_data := &JsonParseObj{}
 	if err := json.Unmarshal([]byte(training_set), training_data); err != nil {
 		fmt.Println("Can't parse json")
-		return false
+		return false, err
 	}
 
 	fmt.Println(training_data)
 
-	condition := false
+	condition = false
 
 	for condition == false {
 		fmt.Println("-------------------------------------------")
@@ -102,7 +102,10 @@ func Learning(threshold float64, eta float64, weights []float64, training_set []
 		for i := 0; i < training_data.Training_set_count; i++ {
 
 			t := getTarget(*training_data, i)
-			value := stof(t.Input_vector)
+			value, err := stof(t.Input_vector)
+			if err != nil {
+				return condition, err
+			}
 			result := dot_product(value, _weights)
 			actual_output := result > threshold
 			fmt.Println("desired_output:", t.Desired_output, "actual_output:", btoi(actual_output))
@@ -124,5 +127,5 @@ func Learning(threshold float64, eta float64, weights []float64, training_set []
 
 	}
 
-	return condition
+	return condition, nil
 }
