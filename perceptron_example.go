@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	
 	/* A perceptron learns to perform a binary NAND function  */
 	training_set, err := ioutil.ReadFile("./json/input.json")
 	if err != nil {
@@ -19,11 +20,10 @@ func main() {
 	learning_rate := 0.1
 	weights := []float64{0.0, 0.0, 0.0}
 
-	result, err := perceptron.Learning(threshold, learning_rate, weights, training_set)
+	err = perceptron.Learning(threshold, learning_rate, weights, training_set)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
-	fmt.Println("finished:", result)
-
-	return
+	fmt.Println("Done!")
 }
