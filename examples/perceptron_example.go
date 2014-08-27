@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./perceptron"
+	"../"
 	"fmt"
 	"io/ioutil"
 )
@@ -9,7 +9,7 @@ import (
 func main() {
 	
 	/* A perceptron learns to perform a binary NAND function  */
-	training_set, err := ioutil.ReadFile("./json/input.json")
+	training_set, err := ioutil.ReadFile("../json/input.json")
 	if err != nil {
 		fmt.Println(err)
 		return

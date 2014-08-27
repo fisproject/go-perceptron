@@ -1,14 +1,14 @@
 package perceptron
 
 import (
-	"./perceptron"
+	"../"
 	"fmt"
 	"io/ioutil"
 	"testing"
 )
 
 func TestLearning(t *testing.T) {
-	training_set, err := ioutil.ReadFile("./json/input.json")
+	training_set, err := ioutil.ReadFile("../json/input.json")
 	if err != nil {
 		fmt.Println(err)
 		return
