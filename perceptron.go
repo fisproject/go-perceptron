@@ -9,11 +9,11 @@ var _weights []float64
 
 type Data struct {
 	Input_vector   []float64 `json:"input_vector"`
-	Desired_output int    `json:"desired_output"`
+	Desired_output int       `json:"desired_output"`
 }
 
 type JSON struct {
-	Training_set    []Data `json:"training_set"`
+	Training_set []Data `json:"training_set"`
 }
 
 /*  bool to int */

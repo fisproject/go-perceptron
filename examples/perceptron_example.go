@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	
+
 	/* A perceptron learns to perform a binary NAND function  */
 	training_set, err := ioutil.ReadFile("../json/input.json")
 	if err != nil {
