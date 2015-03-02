@@ -25,5 +25,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Done!")
+	fmt.Println("Completed!")
 }
