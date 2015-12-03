@@ -3,13 +3,12 @@ package perceptron
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 )
-
-var _weights []float64
 
 type Data struct {
 	Input_vector   []float64 `json:"input_vector"`
-	Desired_output int       `json:"desired_output"`
+	Label int       `json:"label"`
 }
 
 type JSON struct {
@@ -24,57 +23,50 @@ func btoi(b bool) int {
 	return 0
 }
 
-/* 内積 */
-func dot_product(inputValues []float64, weights []float64) float64 {
-
-	fmt.Println("input vector", inputValues)
-	fmt.Println("weights", weights)
-
-	var ret float64 = 0
-
-	for i, v := range inputValues {
-		ret += v * weights[i]
+/* Inner product */
+func inner_product(i []float64, w []float64) (r float64) {
+	for k, v := range i {
+		r += v * w[k]
 	}
-
-	return ret
+	return r
 }
 
 /* Learning */
 func Learning(threshold float64, eta float64, weights []float64, training_set_byte []byte) (err error) {
-	var condition bool = false
 
-	_weights = weights
-
-	var training_data JSON
-	err = json.Unmarshal([]byte(training_set_byte), &training_data)
+	var data JSON
+	err = json.Unmarshal([]byte(training_set_byte), &data)
 	if err != nil {
 		return err
 	}
 
-	for condition == false {
-		fmt.Println("\n> next step")
-		error_count := 0
+	for true {
+		fmt.Println("\n> Next step")
+		error_sum := 0.0
 
-		for i := 0; i < len(training_data.Training_set); i++ {
+		for i := 0; i < len(data.Training_set); i++ {
+			t := data.Training_set[i]
 
-			t := training_data.Training_set[i]
-			result := dot_product(t.Input_vector, _weights)
-			actual_output := result > threshold
-			fmt.Println("expected: ", t.Desired_output, "actual: ", btoi(actual_output))
+			actual_output := threshold < inner_product(t.Input_vector, weights) // Network
 
-			error := t.Desired_output - btoi(actual_output)
+			e := float64(t.Label - btoi(actual_output))
 
-			if error != 0 {
-				error_count += 1
+			if e != 0.0 {
+				error_sum += math.Abs(e)
 				for j, v := range t.Input_vector {
-					// Update the weights
-					_weights[j] += eta * float64(error) * v
+					weights[j] += eta * e * v // Update the weights
 				}
 			}
+
+			fmt.Println("Input vector : ", t.Input_vector, "Expected : ", t.Label, "Actual : ", btoi(actual_output))
+			fmt.Println("Updated Weights", weights)
 		}
-		if error_count == 0 {
-			condition = true
+
+		fmt.Println("Error Sum : ", error_sum)
+
+		if error_sum == 0.0 {
+			break
 		}
 	}
-	return nil
+	return err
 }

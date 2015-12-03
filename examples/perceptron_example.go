@@ -16,14 +16,14 @@ func main() {
 	}
 
 	/* Initialise the weights and the threshold */
-	threshold := 0.5
-	learning_rate := 0.1
-	weights := []float64{0.0, 0.0, 0.0}
+	th := 0.5
+	eta := 0.1
+	w := []float64{0.0, 0.0, 0.0}
 
-	err = perceptron.Learning(threshold, learning_rate, weights, training_set)
+	err = perceptron.Learning(th, eta, w, training_set)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Completed!")
+	fmt.Println("Done!")
 }
