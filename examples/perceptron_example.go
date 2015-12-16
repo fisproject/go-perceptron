@@ -8,22 +8,29 @@ import (
 
 func main() {
 
-	/* A perceptron learns to perform a binary NAND function  */
+	// A perceptron learns to perform a binary NAND function
 	training_set, err := ioutil.ReadFile("../json/input.json")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	/* Initialise the weights and the threshold */
+	// Initialise the weights and the threshold
 	th := 0.5
 	eta := 0.1
 	w := []float64{0.0, 0.0, 0.0}
+	p := perceptron.Perceptron{th, eta, w}
 
-	err = perceptron.Learning(th, eta, w, training_set)
+	// Train
+	err = p.Train(training_set)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Done!")
+	fmt.Println("\nTrain Done!")
+
+	// Predict unknown input
+	x := []float64{1, 0, 1}
+	y := p.Predict(x)
+	fmt.Println(y)
 }
