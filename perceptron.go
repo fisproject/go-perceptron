@@ -7,11 +7,11 @@ import (
 )
 
 type Data struct {
-	Input_vector []float64 `json:"input_vector"`
-	Label        int       `json:"label"`
+	Feats []float64 `json:"feats"`
+	Label int       `json:"label"`
 }
 
-type JSON struct {
+type DataSet struct {
 	Training_set []Data `json:"training_set"`
 }
 
@@ -37,37 +37,36 @@ func inner_product(i []float64, w []float64) (r float64) {
 	return r
 }
 
+func (self *Perceptron) Load(training_set_byte []byte) (d DataSet, err error) {
+	err = json.Unmarshal([]byte(training_set_byte), &d)
+	return d, err
+}
+
 func (self *Perceptron) Predict(input []float64) float64 {
 	return inner_product(input, self.Weights)
 }
 
-func (self *Perceptron) Train(training_set_byte []byte) (err error) {
-
-	var data JSON
-	err = json.Unmarshal([]byte(training_set_byte), &data)
-	if err != nil {
-		return err
-	}
+func (self *Perceptron) Train(d DataSet) (err error) {
 
 	for true {
 		fmt.Println("\n> Next Round")
 		error_sum := 0.0
 
-		for i := 0; i < len(data.Training_set); i++ {
-			t := data.Training_set[i]
+		for i := 0; i < len(d.Training_set); i++ {
+			t := d.Training_set[i]
 
-			actual_output := self.Threshold < inner_product(t.Input_vector, self.Weights) // Network
+			actual_output := self.Threshold < inner_product(t.Feats, self.Weights) // Network
 
 			e := float64(t.Label - btoi(actual_output))
 
 			if e != 0.0 {
 				error_sum += math.Abs(e)
-				for j, v := range t.Input_vector {
+				for j, v := range t.Feats {
 					self.Weights[j] += self.Eta * e * v // Update the weights
 				}
 			}
 
-			fmt.Println("Input vector : ", t.Input_vector, "Expected : ", t.Label, "Actual : ", btoi(actual_output))
+			fmt.Println("Input vector : ", t.Feats, "Expected : ", t.Label, "Actual : ", btoi(actual_output))
 			fmt.Println("Updated Weights", self.Weights)
 		}
 

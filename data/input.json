@@ -1,19 +1,19 @@
 {
     "training_set": [
         {
-            "input_vector": [1,0,0],
+            "feats": [1,0,0],
             "label": 1
         },
         {
-            "input_vector": [1,0,1],
+            "feats": [1,0,1],
             "label": 1
         },
         {
-            "input_vector": [1,1,0],
+            "feats": [1,1,0],
             "label": 1
         },
         {
-            "input_vector": [1,1,1],
+            "feats": [1,1,1],
             "label": 0
         }
     ]

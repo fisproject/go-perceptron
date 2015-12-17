@@ -9,7 +9,7 @@ import (
 func main() {
 
 	// A perceptron learns to perform a binary NAND function
-	training_set, err := ioutil.ReadFile("../json/input.json")
+	training_set, err := ioutil.ReadFile("../data/input.json")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -21,8 +21,14 @@ func main() {
 	w := []float64{0.0, 0.0, 0.0}
 	p := perceptron.Perceptron{th, eta, w}
 
+	train_data, err := p.Load(training_set)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	// Train
-	err = p.Train(training_set)
+	err = p.Train(train_data)
 	if err != nil {
 		fmt.Println(err)
 		return
